@@ -9,7 +9,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../theme';
 import { Typography, FormControl, Select, MenuItem, InputLabel, AppBar, Toolbar } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import ReactGA from 'react-ga';
 
 function useWindowSize() {
   const isClient = typeof window === 'object';
@@ -33,10 +33,18 @@ function useWindowSize() {
   return windowSize;
 }
 
-const useStyles = makeStyles(theme => ({}));
-
 const Index = () => {
-  const classes = useStyles();
+
+  useEffect(() => {
+    if (process.browser) {
+      ReactGA.initialize('UA-135061989-2')
+      ReactGA.set({ page: window.location.pathname })
+      ReactGA.pageview(window.location.pathname)
+    } else {
+      console.log("not in the browser. Can't initialize GA");
+    }
+  }, [])
+
   const size = useWindowSize();
   const [playlists, setPlaylists] = useState([])
   const [selectedPlaylist, setSelectedPlaylist] = useState('');
